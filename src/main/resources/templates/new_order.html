@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<input type="hidden" id="isSenior" th:value="${isSenior}"/>
+<head>
+    <meta charset="UTF-8">
+    <title>New order</title>
+</head>
+<body>
+    <h1>New order</h1>
+   <form action="/new_order?method=add" method="post">
+       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <div>
+        <label for="id">Product name or Id</label>
+        <input type="text" name="nameOrId" id="id" placeholder="0"/>
+    </div>
+    <div>
+        <label for="quantity">Quantity</label>
+        <input type="number" name="quantity" id="quantity" placeholder="0"/>
+    </div>
+
+    <div>
+        <input type="submit" value="Add to the order"/>
+    </div>
+
+</form>
+
+
+
+
+        <p th:if="${items==null||items.isEmpty()}">Nothing in the order yet</p>
+    <div th:if="${items!=null&&!items.isEmpty()}" th:each="item : ${items}">
+        <form>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input th:value="${item.key.getName()}" name="nameOrId" readonly="readonly"/>
+        <p th:text="${item.key.price} + '$ '"/>
+            <input type="number" id="change_qty" name="quantity" th:value="'x'+${item.value.quantity}"/>
+            <input type="submit" formaction="/new_order?method=edit_item" formmethod="post"/>
+            <input th:if="${isSenior}" type="submit" formaction="/new_order/?method=delete" formmethod="post" value="Remove item"/>
+            <b th:text="${item.value.totalAmount}"/>
+        </form>
+    </div>
+
+    <form>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input type="submit" formmethod="post" formaction="/new_order?method=submit" value="Close the order"/>
+        <div style="visibility: hidden" id="cancel_order">
+            <input type="submit"  formmethod="post" formaction="/new_order?method=cancel"/>
+        </div>
+    </form>
+
+
+    <script>
+        if (document.getElementById("isSenior")){
+            document.getElementById("cancel_order").style.setProperty("visibility", "visible");
+        }
+    </script>
+
+</body>
+</html>
