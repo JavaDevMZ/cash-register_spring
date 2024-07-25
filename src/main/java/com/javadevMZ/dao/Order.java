@@ -1,18 +1,15 @@
 package com.javadevMZ.dao;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
+@Data
 @Entity
 @Table(name="orders")
 public class Order extends AbstractEntity<Long>{
@@ -21,15 +18,16 @@ public class Order extends AbstractEntity<Long>{
     @OneToMany(mappedBy="order", cascade=CascadeType.ALL)
     private Map<Product, OrderItem> items = new HashMap<>();
 
-    private Date date;
+    @Column(nullable=false)
+    private LocalDateTime closedAt;
 
     @ManyToOne
     private User cashier;
 
-    public Order(Long id, Double amount, Map<Product, OrderItem> items, Date date, User cashier) {
+    public Order(Long id, Double amount, Map<Product, OrderItem> items, LocalDateTime closedAt, User cashier) {
         setId(id);
         this.items = items;
-        this.date = date;
+        this.closedAt = closedAt;
         this.cashier = cashier;
     }
 
@@ -49,5 +47,10 @@ public class Order extends AbstractEntity<Long>{
            result+=item.getTotalAmount();
        }
         return result;
+    }
+
+    public String toString(){
+        return String.format("Order N°%d: closed by %s %s at %tT. Amount: %f$",
+                getId(), cashier.getRole().toString(), cashier.getEmail(), closedAt, getAmount());
     }
 }

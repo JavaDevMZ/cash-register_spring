@@ -16,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name="users")
+@ToString(exclude = "password")
 public class User extends AbstractEntity<Long>{
 
 

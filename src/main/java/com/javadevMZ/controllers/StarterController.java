@@ -1,10 +1,12 @@
 package com.javadevMZ.controllers;
+import com.javadevMZ.service.ProductManager;
 import com.javadevMZ.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -14,9 +16,11 @@ public class StarterController {
 
 
     private final UserService userService;
+    private final ProductManager productManager;
 
-    public StarterController(UserService userService) {
+    public StarterController(UserService userService, ProductManager productManager) {
         this.userService = userService;
+        this.productManager = productManager;
     }
 
     @GetMapping("/")
@@ -51,6 +55,7 @@ public class StarterController {
             modelAndView.setViewName("admin_home");
         }else if(roles.contains("ROLE_CASHIER") || roles.contains("ROLE_SENIOR_CASHIER")){
             modelAndView.setViewName("cashier_home");
+            modelAndView.addObject("isSenior", roles.contains("ROLE_SENIOR_CASHIER"));
         }else if(roles.contains("ROLE_COMMODITY_EXPERT")){
             modelAndView.setViewName("commodity-expert_home");
         }else{
@@ -62,8 +67,10 @@ public class StarterController {
     }
 
     @GetMapping("/logout")
-    public void logout(){
+    public String logout(){
         SecurityContextHolder.clearContext();
-
+        productManager.setCurrentOrder(null);
+        return "redirect:/login";
     }
 }
+

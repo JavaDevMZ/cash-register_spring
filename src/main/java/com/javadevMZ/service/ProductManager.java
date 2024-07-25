@@ -3,16 +3,18 @@ package com.javadevMZ.service;
 import com.javadevMZ.dao.*;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.annotation.SessionScope;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.Map;
 
 @Data
 @Service
 @EnableMethodSecurity
+@SessionScope
 public class ProductManager {
 
     private Order currentOrder;
@@ -45,14 +47,29 @@ public class ProductManager {
         currentOrder.getItems().put(product, new OrderItem(product, quantity));
     }
 
+    @PreAuthorize("hasRole('SENIOR_CASHIER')")
+    public void removeOrderItem(String productNameOrId){
+        Map<Product, OrderItem> items = currentOrder.getItems();
+        for(Map.Entry<Product, OrderItem> entry : items.entrySet()){
+            if(entry.getKey().equals(getProductByNameOrId(productNameOrId))){
+                items.remove(entry.getKey());
+            }
+        }
+    }
+
     public void commitOrder(){
         for(Product product : currentOrder.getItems().keySet()){
           Long quantity = product.getQuantity()-currentOrder.getItems().get(product).getQuantity();
             productRepository.findById(product.getId()).orElseThrow().setQuantity(quantity);
         }
         currentOrder.setCashier(userService.getCurrentUser());
-        currentOrder.setDate(new Date());
+        currentOrder.setClosedAt(LocalDateTime.now());
         orderRepository.save(currentOrder);
+        currentOrder = null;
+    }
+
+    @PreAuthorize("hasRole('SENIOR_CASHIER')")
+    public void cancelOrder(){
         currentOrder = null;
     }
 }

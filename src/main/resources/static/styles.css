@@ -21,8 +21,11 @@ input.modifiable-text{
     width: 5em;
 }
 input.modifiable-text::placeholder{
-    font-family: "Arial Black";
-    /*todo: make the inputs bigger looking as a simple text. It's better to leave the boxes*/
+    font: inherit;
+    border: none;
+    border-bottom: blue;
+
+    /*todo: make the inputs bigger looking as a simple text. It's better to keep the boxes*/
 }
 
 

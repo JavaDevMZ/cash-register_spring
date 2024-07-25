@@ -24,18 +24,15 @@
 
 </form>
 
-
-
-
         <p th:if="${items==null||items.isEmpty()}">Nothing in the order yet</p>
     <div th:if="${items!=null&&!items.isEmpty()}" th:each="item : ${items}">
         <form>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <input th:value="${item.key.getName()}" name="nameOrId" readonly="readonly"/>
         <p th:text="${item.key.price} + '$ '"/>
-            <input type="number" id="change_qty" name="quantity" th:value="'x'+${item.value.quantity}"/>
-            <input type="submit" formaction="/new_order?method=edit_item" formmethod="post"/>
-            <input th:if="${isSenior}" type="submit" formaction="/new_order/?method=delete" formmethod="post" value="Remove item"/>
+            x<input type="number" id="change_qty" name="quantity" th:value="${item.value.quantity}"/>
+            <input type="submit" formaction="/new_order?method=edit_item" formmethod="post" value="Change the quantity"/>
+            <input th:if="${isSenior}" type="submit" formaction="/new_order?method=remove_item" formmethod="post" value="Remove item"/>
             <b th:text="${item.value.totalAmount}"/>
         </form>
     </div>
@@ -43,17 +40,11 @@
     <form>
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <input type="submit" formmethod="post" formaction="/new_order?method=submit" value="Close the order"/>
-        <div style="visibility: hidden" id="cancel_order">
-            <input type="submit"  formmethod="post" formaction="/new_order?method=cancel"/>
-        </div>
+        <input th:if="${isSenior}" type="submit" formmethod="post" formaction="/new_order?method=cancel" value="Cancel the order"/>
     </form>
 
 
-    <script>
-        if (document.getElementById("isSenior")){
-            document.getElementById("cancel_order").style.setProperty("visibility", "visible");
-        }
-    </script>
+
 
 </body>
 </html>

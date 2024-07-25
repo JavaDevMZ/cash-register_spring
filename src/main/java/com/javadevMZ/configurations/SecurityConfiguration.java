@@ -46,17 +46,22 @@ public class SecurityConfiguration {
                        .requestMatchers(HttpMethod.PUT, "/orders/**").hasAnyRole("CASHIER","SENIOR_CASHIER")
                         .requestMatchers(HttpMethod.DELETE, "/orders/**").hasRole("SENIOR_CASHIER")
                         .requestMatchers(HttpMethod.GET, "/orders/*").hasAnyRole("CASHIER","SENIOR_CASHIER")
+                        .requestMatchers("/new_order").hasAnyRole("CASHIER","SENIOR_CASHIER")
                         .requestMatchers("/z-report", "/x-report").hasRole("SENIOR_CASHIER")
                         .requestMatchers("/warehouse").hasRole("COMMODITY_EXPERT")
                         .requestMatchers("/new_user").hasRole("ADMIN")
+                        .requestMatchers("/actuator/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
                         .permitAll())
-                .logout(logout -> logout.permitAll())
-                .exceptionHandling(handler -> handler.accessDeniedPage("/"));
+                .logout(logout -> logout
+                        .clearAuthentication(true)
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll());
         return httpSecurity.build();
     }
 

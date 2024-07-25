@@ -1,10 +1,7 @@
 package com.javadevMZ.controllers;
 
-import com.javadevMZ.dao.OrderItem;
-import com.javadevMZ.dao.UserRepository;
+import com.javadevMZ.dao.*;
 import com.javadevMZ.service.ProductManager;
-import com.javadevMZ.dao.Order;
-import com.javadevMZ.dao.Product;
 import com.javadevMZ.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,8 +18,11 @@ public class OrderController {
 
     @Autowired
     private ProductManager productManager;
+
     @Autowired
     private UserService userService;
+    @Autowired
+    private OrderRepository orderRepository;
 
 
     @GetMapping("/new_order")
@@ -51,12 +51,20 @@ public class OrderController {
               productManager.editItem(product, quantity);
           }
       }
-          if (method.equals("delete")) {
 
+      if(method.equals("remove_item")) {
+          productManager.removeOrderItem(nameOrId);
+      }
+          if (method.equals("cancel")) {
+              productManager.cancelOrder();
+              return "redirect:/";
           }
-        if(method.equals("submit")) {
+
+          if(method.equals("submit")) {
             productManager.commitOrder();
-        }
+            return "redirect:/";
+          }
         return "redirect:/new_order";
     }
+
 }

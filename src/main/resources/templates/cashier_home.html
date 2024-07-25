@@ -1,13 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html  xmlns:th="http://www.thymeleaf.org" >
 <link rel="stylesheet" type="text/css" href="../static/styles.css"/>
+<input type="hidden" id="isSenior" th:value="${isSenior}"/>
 <head>
+    <style>
+        button{
+            height: 300px;
+            width: 20%
+        }
+    </style>
     <title>Cashier</title>
 </head>
 <body>
-<form action="/new_order" method="get">
-    <button type="submit">New order</button>
-</form>
 
+<form action="/new_order" method="get" style="padding-top: 15%">
+<row>
+        <button th:if="${isSenior}" type="submit" formaction="/x-report" style="margin-left: 15%; margin-right: 5%">X-REPORT</button>
+        <button type="submit" style="text-align: center;">New order</button>
+        <button th:if="${isSenior}" type="submit" formaction="/z-report" style="margin-right: 10%; margin-left: 5%">Z-REPORT</button>
+</row>
+</form>
 </body>
 </html>
