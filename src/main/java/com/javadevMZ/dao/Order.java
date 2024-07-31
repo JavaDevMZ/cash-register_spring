@@ -23,6 +23,7 @@ public class Order extends AbstractEntity<Long>{
 
     @ManyToOne
     private User cashier;
+    private double amount;
 
     public Order(Long id, Double amount, Map<Product, OrderItem> items, LocalDateTime closedAt, User cashier) {
         setId(id);

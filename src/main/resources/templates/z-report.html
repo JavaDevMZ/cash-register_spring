@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{senior_cashier.zreport}"/>
+</head>
+<body>
+    <div th:insert="common-header.html"></div>
+
+    <h1 th:text="#{senior_cashier.zreport}"/>
+    <p th:text="#{report.total_orders}+ ':' + ${order_number}"/>
+    <p th:text="#{report.today_income}+':' + ${income} + '$'"/>
+</body>
+</html>

@@ -2,14 +2,18 @@ package com.javadevMZ.service;
 
 import com.javadevMZ.dao.*;
 import lombok.Data;
+
+import java.io.RandomAccessFile;
+import java.nio.charset.Charset;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
+import org.springframework.web.servlet.LocaleResolver;
 
-import java.time.LocalDateTime;
-import java.util.Map;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.*;
 
 @Data
 @Service
@@ -17,20 +21,16 @@ import java.util.Map;
 @SessionScope
 public class ProductManager {
 
-    private Order currentOrder;
-
     @Autowired
     ProductRepository productRepository;
     @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
     private UserService userService;
-
-    public void addItem(Product product, Long quantity){
-        if(currentOrder == null){currentOrder = new Order();}
-        if(quantity <= 0 || quantity > product.getQuantity()){throw new IllegalArgumentException("Wrong quantity!");}
-        currentOrder.addItem(new OrderItem(product, quantity));
-    }
+    @Autowired
+    private Translator translator;
+    @Autowired
+    private LocaleResolver localeResolver;
+    @Autowired
+    private Manager manager;
 
     public Product getProductByNameOrId(String nameOrId){
       Product product = null;
@@ -43,33 +43,9 @@ public class ProductManager {
         return product;
     }
 
-    public void editItem(Product product, Long quantity){
-        currentOrder.getItems().put(product, new OrderItem(product, quantity));
+    public void translateProduct(Product product, Locale origin){
+        product.setName(translator.translate(product.getName(), origin, Locale.ENGLISH));
+        product.setDescription(translator.translate(product.getDescription(), origin, Locale.ENGLISH));
     }
 
-    @PreAuthorize("hasRole('SENIOR_CASHIER')")
-    public void removeOrderItem(String productNameOrId){
-        Map<Product, OrderItem> items = currentOrder.getItems();
-        for(Map.Entry<Product, OrderItem> entry : items.entrySet()){
-            if(entry.getKey().equals(getProductByNameOrId(productNameOrId))){
-                items.remove(entry.getKey());
-            }
-        }
-    }
-
-    public void commitOrder(){
-        for(Product product : currentOrder.getItems().keySet()){
-          Long quantity = product.getQuantity()-currentOrder.getItems().get(product).getQuantity();
-            productRepository.findById(product.getId()).orElseThrow().setQuantity(quantity);
-        }
-        currentOrder.setCashier(userService.getCurrentUser());
-        currentOrder.setClosedAt(LocalDateTime.now());
-        orderRepository.save(currentOrder);
-        currentOrder = null;
-    }
-
-    @PreAuthorize("hasRole('SENIOR_CASHIER')")
-    public void cancelOrder(){
-        currentOrder = null;
-    }
 }

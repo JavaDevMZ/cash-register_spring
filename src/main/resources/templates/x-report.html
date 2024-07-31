@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{senior_cashier.xreport}"/>
+</head>
+<body>
+    <div th:insert="common-header.html"></div>
+
+    <p th:text="#{report.total_orders}"/>
+    <p th:if="${today_orders==null || today_orders.isEmpty()}" th:text="#{report.no_orders}"/>
+    <p th:each="order : ${today_orders}" th:text="${order}"/>
+</body>
+</html>

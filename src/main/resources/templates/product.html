@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,8 @@
     <title th:text="${product_name}"></title>
 </head>
 <body>
+<div th:insert="common-header.html"></div>
+
     <div style="text-align: center" >
         <button type="button" onclick="showImageLinkInput()" style="width: 150px; height: 150px" >
             <img th:src="${image_link}" th:alt="'No image'"style="width: 150px; height: 150px">
@@ -16,35 +18,47 @@
     <form th:action="'/products/' + ${product_id} + '?method=update'" method="POST" id="product_form">
 
     <div id="image-link_div" style="visibility: hidden">
-        <label for="image_link">Image link</label>
+        <label for="image_link" th:text="#{product.image}"/>
         <input type="url" name='imageLink' id="image_link" class="modifiable-text" th:value="${image_link}"/>
     </div>
 
         <div>
-        <h1 style="color:green">Name:  <input type="text" name="name" class="modifiable-text" th:placeholder="${product_name}" th:value="${product_name}"/></h1>
+        <h1 style="color:green">
+            <p th:text="#{product.name}"/>
+            <p>
+                <input type="text" name="name" th:placeholder="${product_name}" th:value="${product_name}"/>
+            </p>
+        </h1>
         </div>
         <div>
-        <h1 style="color:green">Price per unit or kg:  <input type="number" name="price" class="modifiable-text" th:placeholder="${price}+'$'" th:value="${price}"/></h1>
+            <h1 style="color:green">
+                <p th:text="#{product.price}"/>
+                <input type="number" name="price" class="modifiable-text" th:placeholder="${price}+'$'" th:value="${price}"/>
+            </h1>
         </div>
 
         <div>
-            <h1 style="color:green">Quantity in the warehouse:
-
+            <h1 style="color:green">
+                    <p th:text="#{product.quantity}"/>
                     <input type="number" name="quantity" class="modifiable-text" th:placeholder="${quantity}" th:value="${quantity}"/>
 
             </h1>
         </div>
     <div>
-        <h1 style="color:green">Description: <br> <input type="text" name="description" class="modifiable-text" th:placeholder="${description}" th:value="${description}"/></h1>
+        <h1 style="color:green">
+            <p th:text="#{product.description}"/>
+            <br> <input type="text" name="description" class="modifiable-text" th:placeholder="${description}" th:value="${description}"/>
+        </h1>
     </div>
-    <button type="submit">Update</button>
+    <button type="submit" th:text="#{product.update}"/>
 </form>
 
-
+    <!--
+    My first JavaScript experience)))
+    -->
 <script>
     function showImageLinkInput(){
         document.getElementById("image-link_div").style.visibility="visible";
-
     }
 </script>
 </body>

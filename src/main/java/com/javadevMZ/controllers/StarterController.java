@@ -1,6 +1,10 @@
 package com.javadevMZ.controllers;
+import com.javadevMZ.service.OrderManager;
 import com.javadevMZ.service.ProductManager;
 import com.javadevMZ.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,19 +13,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.net.http.HttpRequest;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class StarterController {
 
-
-    private final UserService userService;
-    private final ProductManager productManager;
-
-    public StarterController(UserService userService, ProductManager productManager) {
-        this.userService = userService;
-        this.productManager = productManager;
-    }
+    @Autowired
+    private  UserService userService;
+    @Autowired
+    private OrderManager orderManager;
 
     @GetMapping("/")
     public ModelAndView showMainPage(ModelAndView modelAndView, Model model) throws Exception{
@@ -66,10 +68,20 @@ public class StarterController {
         return modelAndView;
     }
 
+    @GetMapping("/back")
+    public String back(HttpServletRequest request){
+        if(!SecurityContextHolder.getContext().getAuthentication().isAuthenticated()){
+            return "/login";
+        }
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
+    }
+
     @GetMapping("/logout")
-    public String logout(){
+    public String logout(HttpSession session){
+        session.invalidate();
         SecurityContextHolder.clearContext();
-        productManager.setCurrentOrder(null);
+        orderManager.setCurrentOrder(null);
         return "redirect:/login";
     }
 }

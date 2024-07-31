@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Commodity Expert</title>
+    <title th:text="#{role.commodity_expert}"/>
 </head>
 <body>
+<div th:insert="common-header.html"></div>
     <form method="get">
-        <button formaction="/products">Watch the products list</button>
-        <button formaction="/new_product">Add a product</button>
+        <button formaction="/products" th:text="#{product.list.watch}"/>
+        <button formaction="/new_product" th:text="#{product.new}"/>
     </form>
 
 </body>

@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin</title>
+    <title th:text="#{error.label}"/>
 </head>
 <body>
 <div th:insert="common-header.html"></div>
-<a style="text-align: center" href="/new_user"><h1 th:text="#{admin.new_user}"></h1></a>
+    <h1 th:text="#{error}"/>
 </body>
 </html>

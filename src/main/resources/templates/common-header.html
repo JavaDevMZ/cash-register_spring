@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <header id="menu">
+        <form method="get" style="text-align: right">
+            <button type="submit" formaction="/"><img src="/static/home.png" alt="Home"/></button>
+            <button type="submit" onclick="window.history.back()"><img src="/static/back-arrow.png" alt="Back"/></button>
+            <label for="lang" th:text="#{lang.change}"/>
+            <select name="lang" id="lang">
+                <option th:value="en" th:text="English"/>
+                <option th:value="uk" th:text="Українська"/>
+            </select>
+            <button type="submit" formmethod="get" th:text="#{lang.change}"></button>
+            <button type="submit" formaction="/logout" th:text="#{logout.logout}"></button>
+        </form>
+    </header>
+</body>
+</html>

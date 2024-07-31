@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hello</title>
+    <title th:text="#{login.login}"/>
 </head>
 <body>
-
-    <a style="text-align: center" href="login"><h1>Log in</h1></a>
+    <div th:insert="common-header.html"></div>
+    <button style="text-align: center" action="/login"><h1 th:text="#{login.login}"/></button>
 </body>
 </html>

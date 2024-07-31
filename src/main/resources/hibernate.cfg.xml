@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.url">jdbc:postgresql://localhost:5433/cash-register_spring_db</property>
+    <property name="connection.driver_class">org.postgresql.Driver</property>
+    <property name="connection.username">postgres</property>
+    <property name="connection.password">Maxim.097</property>
+    <mapping class="com.javadevMZ.dao.Order"></mapping>
+    <mapping class="com.javadevMZ.dao.User"></mapping>
+    <mapping class="com.javadevMZ.dao.OrderItem"></mapping>
+    <mapping class="com.javadevMZ.dao.RoleEntity"></mapping>
+    <mapping class="com.javadevMZ.dao.Product"></mapping>
+  </session-factory>
+
+    <!-- DB schema will be updated if needed -->
+    <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
+
+</hibernate-configuration>

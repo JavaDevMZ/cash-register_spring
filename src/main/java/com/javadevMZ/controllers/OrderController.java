@@ -1,6 +1,7 @@
 package com.javadevMZ.controllers;
 
 import com.javadevMZ.dao.*;
+import com.javadevMZ.service.OrderManager;
 import com.javadevMZ.service.ProductManager;
 import com.javadevMZ.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,9 @@ import java.util.Map;
 public class OrderController {
 
     @Autowired
+    private OrderManager orderManager;
+    @Autowired
     private ProductManager productManager;
-
     @Autowired
     private UserService userService;
     @Autowired
@@ -28,7 +30,7 @@ public class OrderController {
     @GetMapping("/new_order")
     public ModelAndView newOrder() {
         Map<Product, OrderItem> items = new HashMap<Product, OrderItem>();
-        Order order = productManager.getCurrentOrder();
+        Order order = orderManager.getCurrentOrder();
         if(order!=null && order.getItems()!=null) {
             items = order.getItems();
         }
@@ -45,23 +47,23 @@ public class OrderController {
       if(nameOrId!=null && quantity!=null) {
           Product product = productManager.getProductByNameOrId(nameOrId);
           if (method.equals("add")) {
-              productManager.addItem(product, quantity);
+              orderManager.addItem(product, quantity);
           }
           if (method.equals("edit_item")) {
-              productManager.editItem(product, quantity);
+              orderManager.editItem(product, quantity);
           }
       }
 
       if(method.equals("remove_item")) {
-          productManager.removeOrderItem(nameOrId);
+          orderManager.removeOrderItem(nameOrId);
       }
           if (method.equals("cancel")) {
-              productManager.cancelOrder();
+              orderManager.cancelOrder();
               return "redirect:/";
           }
 
           if(method.equals("submit")) {
-            productManager.commitOrder();
+            orderManager.commitOrder();
             return "redirect:/";
           }
         return "redirect:/new_order";

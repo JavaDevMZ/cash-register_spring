@@ -1,6 +1,7 @@
 package com.javadevMZ.configurations;
 
 import com.javadevMZ.dao.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,21 +23,6 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-
-    @Bean
-   public UserDetailsService userDetailsManager(UserRepository repository){
-    final List<UserDetails> users = new ArrayList<>();
-        repository.findAll().forEach((x) ->{
-            UserDetails userDetails = User
-                    .withUsername(x.getEmail())
-                    .password(passwordEncoder().encode(x.getPassword()))
-                    .roles(x.getRole().toString())
-                    .build();
-          users.add(userDetails);
-        });
-        UserDetailsService result = new InMemoryUserDetailsManager(users);
-   return result;
-    }
 
     @Bean
    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
